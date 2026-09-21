@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🧠 NeuroTrace
+# NeuroTrace
 
 ### Observability, Trace Analysis & Failure Intelligence for AI Agents
 
