@@ -1,308 +1,286 @@
-# NeuroTrace
+<div align="center">
 
-## AI Agent Observability, Trace Analysis and Failure Intelligence
+# 🧠 NeuroTrace
 
-NeuroTrace is an observability and analysis platform for modern AI agents. It is designed to capture multi-step LLM and tool-calling executions as structured traces, analyze token usage and execution behavior, detect repetitive loops and failures, and provide a foundation for understanding and optimizing agent performance.
+### Observability, Trace Analysis & Failure Intelligence for AI Agents
 
-The project is built around a simple idea:
+**See inside every decision your AI agents make.**
 
-> Make every step of an AI agent's execution visible, measurable, and analyzable.
+[![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-backend-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![React](https://img.shields.io/badge/React-frontend-61DAFB?logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Status](https://img.shields.io/badge/status-active%20development-orange)](#current-development-status)
+[![License](https://img.shields.io/badge/license-TBD-lightgrey)](#license)
 
-## The Idea
+[Overview](#overview) • [Features](#core-capabilities) • [Architecture](#architecture) • [Quick Start](#quick-start) • [Roadmap](#roadmap) • [Contributing](#contributing)
 
-Modern AI agents often execute a chain of operations rather than a single model request. A single task may involve multiple LLM calls, tool calls, API requests, database operations, retries, and intermediate decisions.
+</div>
 
-This makes it difficult to answer questions such as:
+---
 
-- Which step consumed the most tokens?
-- Where did the agent spend unnecessary computation?
-- Did the agent enter a repetitive loop?
-- Which operation caused an execution failure?
-- How expensive was a complete agent run?
-- What was the actual execution path of the agent?
-- Which parts of the execution can be optimized?
+## Overview
 
-NeuroTrace addresses these problems by representing agent executions as structured traces and providing components for trace ingestion, token tracking, loop detection, scoring, and visualization.
+Modern AI agents rarely make a single model call — they **chain** LLM calls, tool invocations, API requests, database operations, and retries into complex, multi-step executions. When something goes wrong (or gets expensive, or loops forever), most teams are left debugging blind.
 
-The long-term goal is to provide a developer-focused observability layer for AI agent systems that can work with different agent frameworks and execution environments.
+**NeuroTrace** turns opaque agent executions into structured, queryable, visual traces — so you can answer the questions that actually matter:
+
+- 💸 Which step consumed the most tokens?
+- 🔁 Did the agent get stuck in a repetitive loop?
+- 🐌 Where is execution time or cost being wasted?
+- ❌ Which operation caused the failure?
+- 🧩 What was the agent's actual execution path?
+- 📊 How much did this run cost, end to end?
+
+> **The idea is simple:** make every step of an AI agent's execution visible, measurable, and analyzable.
+
+---
 
 ## Core Capabilities
 
-### Trace Collection
+<table>
+<tr>
+<td width="33%" valign="top">
 
-Capture individual events produced during an agent execution, including:
+### 📥 Trace Collection
+Capture every event in an agent's execution — LLM calls, tool calls, parent-child relationships, inputs/outputs, execution order, and metadata — as structured, replayable traces.
 
-- LLM calls
-- Tool calls
-- Execution metadata
-- Parent-child relationships
-- Inputs and outputs
-- Execution order
+</td>
+<td width="33%" valign="top">
 
-### Trace Analysis
+### 🔍 Trace Analysis
+Break down token consumption, surface the most expensive steps, detect repetitive operations and potential loops, flag failed operations, and map execution structure.
 
-Analyze collected traces to identify:
+</td>
+<td width="33%" valign="top">
 
-- Token consumption
-- Expensive execution steps
-- Repetitive operations
-- Potential execution loops
-- Failed operations
-- Execution structure
+### 📈 Performance Intelligence
+Convert raw execution data into actionable signals through scoring, loop detection, and analysis components built for extensibility.
 
-### Agent Performance Intelligence
+</td>
+</tr>
+</table>
 
-Transform raw execution data into useful signals through scoring and analysis components.
+**On the roadmap:** semantic similarity analysis, anomaly detection, advanced failure classification, automated cost-optimization suggestions, and execution quality metrics.
 
-The architecture is designed to support future capabilities such as:
+### 🧪 Agent Framework Testbed
 
-- Semantic similarity analysis
-- Anomaly detection
-- Advanced failure classification
-- Cost optimization suggestions
-- Execution quality metrics
+NeuroTrace ships with a built-in testbed for generating realistic traces against popular agent frameworks, including:
 
-### Agent Framework Testbed
+- **CrewAI**
+- **LangGraph**
 
-The repository includes an agent testbed for generating representative traces and experimenting with agent frameworks such as:
+This makes it easy to validate NeuroTrace against real agent behavior — or to use as a reference implementation for instrumenting your own framework.
 
-- CrewAI
-- LangGraph
+---
 
-## Tech Stack
+## Architecture
 
-### Backend
+NeuroTrace is a full-stack platform, cleanly separated into three layers:
+
+| Layer | Role |
+|---|---|
+| **Agent Testbed** | Generates representative execution traces from real agent frameworks (CrewAI, LangGraph) |
+| **Backend** | Ingests, stores, and analyzes traces via a FastAPI service backed by SQLAlchemy/SQLite, with vector search for semantic analysis |
+| **Frontend** | Visualizes execution as an interactive DAG, with trace browsing and inspection tooling |
+
+### Tech Stack
+
+<table>
+<tr>
+<td valign="top">
+
+**Backend**
 
 | Technology | Purpose |
-| --- | --- |
-| Python 3.11 | Backend and analysis services |
+|---|---|
+| Python 3.11 | Core services |
 | FastAPI | REST API framework |
-| Uvicorn | ASGI application server |
-| Pydantic | Data validation and schemas |
+| Uvicorn | ASGI server |
+| Pydantic | Validation & schemas |
 | SQLAlchemy | Database ORM |
 | SQLite | Local trace persistence |
 | Sentence Transformers | Semantic embeddings |
 | FAISS | Vector similarity search |
 
-### Frontend
+</td>
+<td valign="top">
+
+**Frontend**
 
 | Technology | Purpose |
-| --- | --- |
-| React | User interface |
-| TypeScript | Type-safe frontend development |
-| Vite | Frontend build and development tooling |
-| ESLint | Code quality and linting |
+|---|---|
+| React | UI framework |
+| TypeScript | Type-safe development |
+| Vite | Build & dev tooling |
+| ESLint | Code quality |
 
-### Agent Testbed
+</td>
+<td valign="top">
+
+**Agent Testbed**
 
 | Technology | Purpose |
-| --- | --- |
+|---|---|
 | CrewAI | Agent execution testing |
 | LangGraph | Graph-based agent testing |
 | Python | Testbed implementation |
 
-## Project Structure
+</td>
+</tr>
+</table>
+
+### Project Structure
 
 ```text
 NeuroTrace/
-|
-|-- agents_testbed/
-|   |-- crewai_agent.py
-|   |-- generate_sample_trace.py
-|   `-- langgraph_agent.py
-|
-|-- backend/
-|   |-- app/
-|   |   |-- api/
-|   |   |   `-- traces.py
-|   |   |
-|   |   |-- core/
-|   |   |
-|   |   |-- db/
-|   |   |   `-- session.py
-|   |   |
-|   |   |-- models/
-|   |   |   |-- db_models.py
-|   |   |   `-- schemas.py
-|   |   |
-|   |   |-- services/
-|   |   |   |-- embeddings/
-|   |   |   |
-|   |   |   |-- scoring/
-|   |   |   |   |-- loop_detector.py
-|   |   |   |   `-- token_tracker.py
-|   |   |   |
-|   |   |   `-- ingestion.py
-|   |   |
-|   |   `-- main.py
-|   |
-|   `-- requirements.txt
-|
-|-- frontend/
-|   |-- public/
-|   |
-|   |-- src/
-|   |   |-- api/
-|   |   |-- assets/
-|   |   |-- components/
-|   |   |-- features/
-|   |   |   |-- DAGViewer/
-|   |   |   `-- TraceList/
-|   |   |-- store/
-|   |   |-- App.tsx
-|   |   `-- main.tsx
-|   |
-|   |-- package.json
-|   |-- package-lock.json
-|   |-- tsconfig.json
-|   |-- tsconfig.app.json
-|   |-- tsconfig.node.json
-|   `-- vite.config.ts
-|
-|-- .gitignore
-`-- README.md
+├── agents_testbed/
+│   ├── crewai_agent.py
+│   ├── generate_sample_trace.py
+│   └── langgraph_agent.py
+│
+├── backend/
+│   ├── app/
+│   │   ├── api/
+│   │   │   └── traces.py
+│   │   ├── core/
+│   │   ├── db/
+│   │   │   └── session.py
+│   │   ├── models/
+│   │   │   ├── db_models.py
+│   │   │   └── schemas.py
+│   │   ├── services/
+│   │   │   ├── embeddings/
+│   │   │   ├── scoring/
+│   │   │   │   ├── loop_detector.py
+│   │   │   │   └── token_tracker.py
+│   │   │   └── ingestion.py
+│   │   └── main.py
+│   └── requirements.txt
+│
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── api/
+│   │   ├── assets/
+│   │   ├── components/
+│   │   ├── features/
+│   │   │   ├── DAGViewer/
+│   │   │   └── TraceList/
+│   │   ├── store/
+│   │   ├── App.tsx
+│   │   └── main.tsx
+│   ├── package.json
+│   └── vite.config.ts
+│
+├── .gitignore
+└── README.md
 ```
 
-## Setup Guide
+---
+
+## Quick Start
 
 ### Prerequisites
 
-Install the following before setting up NeuroTrace:
+- **Python 3.11** *(required — needed for FAISS and Sentence Transformers compatibility)*
+- **Node.js 18+**
+- **npm**
+- **Git**
 
-- Python 3.11
-- Node.js 18 or later
-- npm
-- Git
-
-Python 3.11 is recommended because the project includes machine-learning dependencies such as FAISS and Sentence Transformers.
-
-### 1. Clone the Repository
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/<your-username>/neurotrace.git
 cd neurotrace
 ```
 
-### 2. Backend Setup
-
-Navigate to the backend directory:
+### 2. Set up the backend
 
 ```bash
 cd backend
-```
 
-Create a Python virtual environment:
-
-#### Windows
-
-```powershell
-python -m venv venv
-```
-
-Activate the environment:
-
-```powershell
-.\venv\Scripts\Activate.ps1
-```
-
-#### Linux / macOS
-
-```bash
+# Create and activate a virtual environment
 python3 -m venv venv
-source venv/bin/activate
-```
+source venv/bin/activate        # Windows: .\venv\Scripts\Activate.ps1
 
-Install the backend dependencies:
-
-```bash
+# Install dependencies
 python -m pip install -r requirements.txt
-```
 
-Start the FastAPI development server:
-
-```bash
+# Launch the API server
 uvicorn app.main:app --reload
 ```
 
-The API will be available at:
+| Service | URL |
+|---|---|
+| API | http://127.0.0.1:8000 |
+| Interactive docs (Swagger) | http://127.0.0.1:8000/docs |
 
-```text
-http://127.0.0.1:8000
-```
+### 3. Set up the frontend
 
-FastAPI's interactive documentation will be available at:
-
-```text
-http://127.0.0.1:8000/docs
-```
-
-### 3. Frontend Setup
-
-Open a new terminal and navigate to the frontend:
+In a new terminal:
 
 ```bash
 cd frontend
-```
-
-Install dependencies:
-
-```bash
 npm install
-```
-
-Start the Vite development server:
-
-```bash
 npm run dev
 ```
 
-The frontend will be available at:
+The app will be available at **http://localhost:5173**.
 
-```text
-http://localhost:5173
-```
+### 4. Generate sample traces
 
-### 4. Run the Agent Testbed
-
-From the project root, make sure the backend virtual environment is active:
-
-```powershell
-.\backend\venv\Scripts\Activate.ps1
-```
-
-Then run the sample trace generator:
+With the backend virtual environment active, from the project root:
 
 ```bash
 python agents_testbed/generate_sample_trace.py
 ```
 
+This runs a sample agent execution through the testbed and feeds real trace data into NeuroTrace — the fastest way to see the platform in action.
+
+---
+
 ## Configuration
 
-Environment-specific configuration and secrets should not be committed to the repository.
-
-Use environment variables for values such as API keys and external service credentials.
-
-A local environment file can be created as:
-
-```text
-.env
-```
-
-For example:
+Secrets and environment-specific values are kept out of version control. Create a local `.env` file in the backend directory:
 
 ```env
 GEMINI_API_KEY=your_api_key
 DATABASE_URL=your_database_url
 ```
 
-Do not commit real credentials or secrets to Git.
+> ⚠️ Never commit real credentials or API keys to the repository.
+
+---
+
+## Roadmap
+
+- [ ] Semantic similarity analysis across traces
+- [ ] Anomaly detection for execution outliers
+- [ ] Advanced failure classification
+- [ ] Automated cost-optimization suggestions
+- [ ] Execution quality scoring
+- [ ] Broader agent framework support beyond CrewAI / LangGraph
+- [ ] Production deployment guide
 
 ## Current Development Status
 
-NeuroTrace is currently under active development.
+🚧 **NeuroTrace is under active development.**
 
-The repository currently contains the initial backend, frontend, trace ingestion, scoring components, database layer, and agent testbed. Additional observability, analysis, visualization, and production infrastructure capabilities will be added incrementally.
+The repository currently includes the initial backend, frontend, trace ingestion pipeline, scoring components, database layer, and agent testbed. Additional observability, analysis, visualization, and production-readiness features are being added incrementally.
+
+Feedback, issues, and ideas are welcome as the project takes shape.
+
+## Contributing
+
+Contributions, bug reports, and feature suggestions are welcome. If you're interested in AI agent observability and want to help shape the project's direction, feel free to open an issue or start a discussion.
 
 ## License
 
-This project is currently under development. A project license will be added before public production distribution.
+This project is currently under development. A license will be added prior to public production distribution.
+
+---
+
+<div align="center">
+<sub>Built for developers who want to see what their AI agents are actually doing.</sub>
+</div>
